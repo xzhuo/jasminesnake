@@ -1,6 +1,6 @@
 import os
 
-SUFFIX = '.hifi.bam'
+SUFFIX = '.reads.bam'
 suffix_length = len(SUFFIX)
 SAMPLES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
 # SAMPLES = ["bam"]
@@ -11,11 +11,21 @@ configfile: "config.yaml"
 I = config["sample"]
 rule all:
     input:
-        expand("{sample}.model.combined.bed", sample=SAMPLES),
-        expand("{sample}.count.combined.bed", sample=SAMPLES)
+        I + ".model.combined.bed",
+        I + ".count.combined.bed"
+
+rule extracthifi:
+    input:
+        bam = "{sample}.reads.bam"
+    output:
+        bam = "{sample}.hifi.bam"
+    threads:
+        4
+    shell:
+        "extracthifi -j 4 {input.bam} {output.bam}"
 
 rule jasmine:
-    input: 
+    input:
         bam = "{sample}.hifi.bam"
     output:
         bam = "{sample}.5mc.bam"
@@ -28,13 +38,13 @@ rule fofn:
     input:
         expand("{sample}.5mc.bam", sample=SAMPLES)
     output:
-        I + ".fofn"
+        I + ".5mc.fofn"
     shell:
         "ls {input} > {output}"
 
 rule pbmm2:
     input:
-        fofn = I + ".fofn"
+        fofn = I + ".5mc.fofn"
         ref = REF
     output:
         bam = I + ".5mc.hg38.bam",
