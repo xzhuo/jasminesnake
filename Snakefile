@@ -48,5 +48,5 @@ rule pbCpGtools:
         prefix_model = "{sample}.model",
         prefix_count = "{sample}.count"
     run:
-        shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_model} --model {params.model} --threads {threads})
+        shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_model} --model {params.model} --threads {threads})")
         shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_count} --pileup-mode count --threads {threads}")
