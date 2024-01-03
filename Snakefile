@@ -8,9 +8,11 @@ print(SAMPLES)
 
 REF = "/storage1/fs1/hprc/Active/xzhuo/ref/hg38.fa"
 configfile: "config.yaml"
+tmpdir=config["tmpdir"]
 I = config["sample"]
 rule all:
     input:
+        I + ".5mc.hg38.bam",
         I + ".model.combined.bed",
         I + ".count.combined.bed"
 
