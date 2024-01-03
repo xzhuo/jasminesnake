@@ -46,7 +46,7 @@ rule fofn:
 
 rule pbmm2:
     input:
-        fofn = I + ".5mc.fofn"
+        fofn = I + ".5mc.fofn",
         ref = REF
     output:
         bam = I + ".5mc.hg38.bam",
