@@ -2,9 +2,9 @@ import os
 
 SUFFIX = '.reads.bam'
 suffix_length = len(SUFFIX)
-SAMPLES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
+FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
 
-print(SAMPLES)
+print(FILES)
 
 configfile: "config.yaml"
 REF = config["ref"]
@@ -19,9 +19,9 @@ rule all:
 
 rule extracthifi:
     input:
-        bam = "{sample}.reads.bam"
+        bam = "{file}.reads.bam"
     output:
-        bam = "{sample}.hifi.bam"
+        bam = "{file}.hifi.bam"
     threads:
         4
     shell:
@@ -29,9 +29,9 @@ rule extracthifi:
 
 rule jasmine:
     input:
-        bam = "{sample}.hifi.bam"
+        bam = "{file}.hifi.bam"
     output:
-        bam = "{sample}.5mc.bam"
+        bam = "{file}.5mc.bam"
     threads:
         16
     shell:
@@ -39,7 +39,7 @@ rule jasmine:
 
 rule fofn:
     input:
-        expand("{sample}.5mc.bam", sample=SAMPLES)
+        expand("{file}.5mc.bam", file=FILES)
     output:
         I + ".5mc.fofn"
     shell:
