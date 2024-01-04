@@ -3,7 +3,7 @@ import os
 SUFFIX = '.reads.bam'
 suffix_length = len(SUFFIX)
 SAMPLES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
-# SAMPLES = ["bam"]
+
 print(SAMPLES)
 
 configfile: "config.yaml"
@@ -14,8 +14,8 @@ I = config["sample"]
 rule all:
     input:
         I + ".5mc." + REF + ".bam",
-        I + ".model.combined.bed",
-        I + ".count.combined.bed"
+        I + ".5mc." + REF + ".model.combined.bed",
+        I + ".5mc." + REF + ".count.combined.bed"
 
 rule extracthifi:
     input:

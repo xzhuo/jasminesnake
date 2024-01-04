@@ -1,0 +1,4 @@
+tmpdir: "/storage1/fs1/hprc/Active/xzhuo/tmp"
+ref: "hg38"
+fa: "/storage1/fs1/hprc/Active/xzhuo/ref/hg38.fa"
+sample: "sample"
