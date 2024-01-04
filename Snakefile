@@ -53,7 +53,7 @@ rule pbmm2:
         bam = I + ".5mc." + REF + ".bam",
         bai = I + ".5mc." + REF + ".bam.bai"
     threads:
-        16
+        32
     shell:
         "pbmm2 align {input.fasta} {input.fofn} {output.bam} --preset CCS --sort -j {threads} -m 2G"
 
@@ -64,7 +64,7 @@ rule pbCpGtools:
         model = I + ".5mc." + REF + ".model.combined.bed",
         counts = I + ".5mc." + REF + ".count.combined.bed"
     threads:
-        8
+        32
     params:
         model = "/pb-CpG-tools-v2.3.2-x86_64-unknown-linux-gnu/models/pileup_calling_model.v1.tflite",
         prefix_model = I + ".5mc." + REF + ".model",
