@@ -6,13 +6,14 @@ SAMPLES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFF
 # SAMPLES = ["bam"]
 print(SAMPLES)
 
-REF = "/storage1/fs1/hprc/Active/xzhuo/ref/hg38.fa"
 configfile: "config.yaml"
+REF = config["ref"]
+FASTA = config["fa"]
 tmpdir=config["tmpdir"]
 I = config["sample"]
 rule all:
     input:
-        I + ".5mc.hg38.bam",
+        I + ".5mc." + REF + ".bam",
         I + ".model.combined.bed",
         I + ".count.combined.bed"
 
@@ -47,27 +48,27 @@ rule fofn:
 rule pbmm2:
     input:
         fofn = I + ".5mc.fofn",
-        ref = REF
+        fasta = FASTA
     output:
-        bam = I + ".5mc.hg38.bam",
-        bai = I + ".5mc.hg38.bam.bai"
+        bam = I + ".5mc." + REF + ".bam",
+        bai = I + ".5mc." + REF + ".bam.bai"
     threads:
         16
     shell:
-        "pbmm2 align {input.ref} {input.fofn} {output.bam} --preset CCS --sort -j {threads} -m 2G"
+        "pbmm2 align {input.fasta} {input.fofn} {output.bam} --preset CCS --sort -j {threads} -m 2G"
 
 rule pbCpGtools:
     input:
-        bam = I + ".5mc.hg38.bam"
+        bam = I + ".5mc." + REF + ".bam"
     output:
-        model = I + ".model.combined.bed",
-        counts = I + ".count.combined.bed"
+        model = I + ".5mc." + REF + ".model.combined.bed",
+        counts = I + ".5mc." + REF + ".count.combined.bed"
     threads:
         8
     params:
         model = "/pb-CpG-tools-v2.3.2-x86_64-unknown-linux-gnu/models/pileup_calling_model.v1.tflite",
-        prefix_model = I +".model",
-        prefix_count = I + ".count"
+        prefix_model = I + ".5mc." + REF + ".model",
+        prefix_count = I + ".5mc." + REF + ".count"
     run:
         shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_model} --model {params.model} --threads {threads})")
         shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_count} --pileup-mode count --threads {threads}")
