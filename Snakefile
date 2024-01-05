@@ -1,16 +1,16 @@
 import os
 
-SUFFIX = '.reads.bam'
-suffix_length = len(SUFFIX)
-FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
-
-print(FILES)
-
 configfile: "config.yaml"
 REF = config["ref"]
 FASTA = config["fa"]
 tmpdir=config["tmpdir"]
 I = config["sample"]
+SUFFIX = config["suffix"]
+suffix_length = len(SUFFIX)
+FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
+
+print(FILES)
+
 rule all:
     input:
         I + ".5mc." + REF + ".bam",
@@ -31,11 +31,14 @@ rule jasmine:
     input:
         bam = "{file}.hifi.bam"
     output:
-        bam = "{file}.5mc.bam"
+        bam = "{file}.5mc.bam",
+        log = "{file}.5mc.jasmine.log"
     threads:
         16
+    params:
+        np = 2,
     shell:
-        "jasmine -j {threads} {input.bam} {output.bam}"
+        "jasmine -j {threads} --min-passes {np} --log-file {output.log} {input.bam} {output.bam}"
 
 rule fofn:
     input:
@@ -70,5 +73,5 @@ rule pbCpGtools:
         prefix_model = I + ".5mc." + REF + ".model",
         prefix_count = I + ".5mc." + REF + ".count"
     run:
-        shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_model} --model {params.model} --threads {threads})")
+        shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_model} --model {params.model} --threads {threads}")
         shell("aligned_bam_to_cpg_scores --bam {input} --output-prefix {params.prefix_count} --pileup-mode count --threads {threads}")
