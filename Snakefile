@@ -6,6 +6,7 @@ FASTA = config["fa"]
 tmpdir=config["tmpdir"]
 I = config["sample"]
 SUFFIX = config["suffix"]
+INIT = config["init"]  # one of ["reads", "hifi", "5mc"]
 suffix_length = len(SUFFIX)
 FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
 
@@ -16,6 +17,14 @@ rule all:
         I + ".5mc." + REF + ".bam",
         I + ".5mc." + REF + ".model.combined.bed",
         I + ".5mc." + REF + ".count.combined.bed"
+
+rule softlink_rename:
+    input:
+        expand("{file}" + SUFFIX, file=FILES)
+    output:
+        expand("{file}" + INIT + ".bam", file=FILES)
+    shell:
+        "ln -s {input} {output}"
 
 rule extracthifi:
     input:

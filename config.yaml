@@ -3,3 +3,4 @@ ref: "hg38"
 fa: "/storage1/fs1/hprc/Active/xzhuo/ref/hg38.fa"
 sample: "sample"
 suffix: ".reads.bam"
+init: "reads"  # one of [reads, hifi, 5mc]
