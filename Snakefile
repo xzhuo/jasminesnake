@@ -38,7 +38,7 @@ rule jasmine:
     params:
         np = 2,
     shell:
-        "jasmine -j {threads} --min-passes {np} --log-file {output.log} {input.bam} {output.bam}"
+        "jasmine -j {threads} --min-passes {params.np} --log-file {output.log} {input.bam} {output.bam}"
 
 rule fofn:
     input:
