@@ -11,9 +11,9 @@ suffix_length = len(SUFFIX)
 FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX), os.listdir("."))))
 
 print(FILES)
-if SUFFIX != INT + ".bam":
+if SUFFIX != INIT + ".bam":
     for f in FILEs:
-        os.symlink("{file}" + SUFFIX, "{file}" + INT + ".bam")
+        os.symlink("{file}" + SUFFIX, "{file}" + INIT + ".bam")
 
 rule all:
     input:
