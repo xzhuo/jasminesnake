@@ -13,7 +13,7 @@ FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX
 print(FILES)
 if SUFFIX != INIT + ".bam":
     for f in FILES:
-        os.symlink("{file}" + SUFFIX, "{file}" + INIT + ".bam")
+        os.symlink("{f}" + SUFFIX, "{f}." + INIT + ".bam")
 
 rule all:
     input:
