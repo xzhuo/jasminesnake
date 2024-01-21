@@ -13,8 +13,8 @@ FILES = set(map(lambda x: x[:-suffix_length], filter(lambda y: y.endswith(SUFFIX
 print(FILES)
 if SUFFIX != f".{INIT}.bam":
     for f in FILES:
-        if not os.path.exists(f"{f}{INIT}.bam"):
-            os.symlink(f + SUFFIX, f"{f}{INIT}.bam")
+        if not os.path.exists(f"{f}.{INIT}.bam"):
+            os.symlink(f + SUFFIX, f"{f}.{INIT}.bam")
 
 rule all:
     input:
